@@ -4,7 +4,7 @@
     $post = get_single_post();
 
     // condition pour rediriger vers la page d'erreur si un id de post inexistant est renseigné dans l'url
-    if($post == false){
+    if($post == false || $post == ""){
         header("Location:index.php?page=error");
     }else{
 
@@ -21,11 +21,64 @@
             <!-- cette ouverture de div permet d'ouvrir la div container global fermée à la ligne 13-->
             <div class="container">
 
+                <!-- ////////////////////////////////////////////////////////////////////////////////////////////-->
+                <?php
+
+                if(isset($_POST['submit'])){
+                    $name = htmlspecialchars(trim($_POST['name']));
+                    $email = htmlspecialchars(trim($_POST['email']));
+                    $comment = htmlspecialchars(trim($_POST['comment']));
+
+                    // on va stocker les messages d'erreurs dans un tableau, on le déclare vide en premier lieu
+                    $errors=[];
+
+                    if(empty($name) || empty($email) || empty($comment) ){
+                        $errors['empty'] = "tous les champs n'ont pas été remplis";
+                    }else{
+                        // FILTER_VALIDATE_EMAIL natif à php , à bosser: veux dire si l'email est différent du filtre de validation email alors display un message d'erreur
+                        if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+                            $errors['email']= "L'adresse dois etre une adresse email valide.";
+                        }
+                    }
+                    if(!empty($errors)){
+                        ?>
+
+                        <div class="card red">
+                            <div class="card-content white-text">
+                                <?php
+                                // on boucle pour parcourir le tableau des erreurs pour toutes les afficher
+                                foreach($errors as $error){
+                                    echo $error."<br/>";
+                                }
+                                ?>
+                            </div>
+                        </div>
+
+                    <?php
+                    }else{
+
+                        comment($name,$email,$comment);
+
+                        //redirection via header ne marche pas car on a déja du contenu , on va donc utiliser un script js ( ne pas utiliser ceci si la redirection est vitale
+                        //au fonctionnement du site.
+
+                        ?> <!-- fermer la balise php pour inserer le script sinon erreur ! -->
+                        <!--script>
+                                window.location.replace("index.php?page=post&id= <?= $_GET['id'] ?>");
+                            </script-->
+                    <?php
+
+                    }
+                }
+
+                ?>
+                <!-- ////////////////////////////////////////////////////////////////////////////////////////////-->
+
                 <h2> <?= $post->title ?></h2>
                 <h6>Par <?= $post->name ?> le <?= date("d/m/Y à H:i", strtotime($post->date)) ?> </h6>
 
                 <!-- attention au ; apres nl2br , sinon pas d'affichage et pas d'erreur php non plus ! -->
-                <p> <?= nl2br($post->content); ?> </p>
+                <p class="flow-text"> <?= nl2br($post->content); ?> </p>
 
 
     <?php
@@ -35,73 +88,35 @@
     <hr/>
          <h4>Commenter:</h4>
 
-                <?php
+                <p class="red-text">Veuillez être respecteux quand vous commenter un article. Tous commentaire à carctère raciste,
+                    politique ou religieux, seront supprimés par un modérateur. Exprimez vous de façon lisible, le language sms est donc
+                    proscrit. Votre adresse email ne seras pas utiliser à des fins commerciales, elle seras utile pour nous et servira éventuelement
+                à vous contacter pour vous proposer d'etre modérateur si vous participez activement au blog.</p>
 
-                    if(isset($_POST['submit'])){
-                        $name = htmlspecialchars(trim($_POST['name']));
-                        $email = htmlspecialchars(trim($_POST['email']));
-                        $comment = htmlspecialchars(trim($_POST['comment']));
 
-                        // on va stocker les messages d'erreurs dans un tableau, on le déclare vide en premier lieu
-                        $errors=[];
-
-                        if(empty($name) || empty($email) || empty($comment) ){
-                            $errors['empty'] = "tous les champs n'ont pas été remplis";
-                        }else{
-                            // FILTER_VALIDATE_EMAIL natif à php , à bosser: veux dire si l'email est différent du filtre de validation email alors display un message d'erreur
-                            if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-                                $errors['email']= "L'adresse dois etre une adresse email valide.";
-                            }
-                        }
-                        if(!empty($errors)){
-                            ?>
-
-                                <div class="card red">
-                                    <div class="card-content white-text">
-                                        <?php
-                                            // on boucle pour parcourir le tableau des erreurs pour toutes les afficher
-                                            foreach($errors as $error){
-                                                echo $error."<br/>";
-                                            }
-                                        ?>
-                                    </div>
-                                </div>
-
-                            <?php
-                        }else{
-
-                            comment($name,$email,$comment);
-
-                            //redirection via header ne marche pas car on a déja du contenu , on va donc utiliser un script js ( ne pas utiliser ceci si la redirection est vitale
-                            //au fonctionnement du site.
-
-                            ?> <!-- fermer la balise php pour inserer le script sinon erreur ! -->
-                            <!--script>
-                                window.location.replace("index.php?page=post&id= <?= $_GET['id'] ?>");
-                            </script-->
-                            <?php
-
-                        }
-                    }
-
-                ?>
 
                 <form action="" method="post">
                     <div class="row">
                         <div class="input-field col s12 m6 ">
+                            <i class="material-icons prefix">account_circle</i>
                             <input type="text" name="name" id="name"/>
                             <label for="name">Nom</label>
                         </div>
                         <div class="input-field col s12 m6 ">
+                            <i class="material-icons prefix">email</i>
                             <input type="email" name="email" id="email"/>
                             <label for="email">adresse email</label>
                         </div>
                         <div class="input-field col s12">
+                            <i class="material-icons prefix">mode_edit</i>
                             <textarea name="comment" id="comment" class="materialize-textarea"></textarea>
                             <label for="comment">Commentaire</label>
                         </div>
                         <div class="col s12">
-                            <button type="submit" name="submit" class="btn waves-effect">Envoyer le commentaire</button>
+                            <button type="submit" name="submit" class="btn waves-effect">
+                                Envoyer le commentaire
+                                <i class="material-icons right">send</i>
+                            </button>
                         </div>
                     </div>
                 </form>

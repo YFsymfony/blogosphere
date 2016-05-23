@@ -79,7 +79,7 @@ function comment($name,$email,$comment){
 
     ));
 
-    echo 'commentaire ajouté';
+    echo '<div class="card green"><div class="card-content white-text">commentaire ajouté</div></div>';
 
 
 }

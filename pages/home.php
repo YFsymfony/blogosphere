@@ -2,6 +2,12 @@
 
 <hr>
 
+<p class="flow-text">Bienvenue sur BLOGOSPHERE ! Tous les articles sont disponibles au grand publique y compris la section commentaire.
+Aucune inscription n'est nécessaire pour participer, veuillez être respecteux et écrire de façon lisible ( pas de language sms ).
+Si les règles simple du savoir vivre ne sont pas respecter, un modérateur supprimera vos publications. Bon surf sur le blog.</p>
+
+<hr/>
+
 <div class="row">
 <?php
 
@@ -11,7 +17,7 @@
     foreach($posts as $post){
         ?>
             <div class="col l6 m6 s12">
-                <div class="card">
+                <div class="card hoverable">
                     <div class="card-content">
                         <h5 class="grey-text text-darken-2">
                             <!-- la ligne en dessous équivaut à echo $post->title -->
@@ -22,7 +28,7 @@
                         </h6>
                     </div>
                     <div class="card-image waves-effect waves-block ">
-                        <img src="img/posts/<?= $post->image ?>" alt="<?= $post->title ?>" class="activator"/>
+                        <img src="img/posts/<?= $post->image ?>" alt="<?= $post->title ?>" class="activator "/>
                     </div>
                     <div class="card-content">
                         <span class="card-title activator grey-text text-darken-4"><i class="material-icons right">more_vert</i></span>
