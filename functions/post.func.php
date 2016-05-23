@@ -36,6 +36,13 @@ function comment($name,$email,$comment){
 
     global $db;
 
+    // test des différentes manières d'éxécuter la requete pour enregistrer le commentaire dans la base de données.
+
+
+    //---------------------------------------------------------------------------------------------------------------------------------------
+
+    //checker pourquoi ca marche pas , surement erreur de typo !!!!
+
     /*
     $c = array(
         'name'    => $name,
@@ -51,10 +58,17 @@ function comment($name,$email,$comment){
     $request->execute($c);
     */
 
+    //--------------------------------------------------------------------------------------------------------------------------------------
+
+    //checker pourquoi ca marche pas , surement erreur de typo !!!!
+
     /*
     $req = $db->prepare(" INSERT INTO comments(name,email,comment,post_id,date) VALUES(:name, :email, :comment, :post_id, NOW())");
     $req->execute($c);
     */
+
+
+    //---------------------------------------------------------------------------------------------------------------------------------------
 
     $req = $db->prepare('INSERT INTO comments(name,email,comment,post_id,date) VALUES(:name, :email, :comment, :post_id, NOW())');
     $req->execute(array(
